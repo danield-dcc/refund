@@ -46,6 +46,11 @@ export const selectElementVariants = tv({
   },
 });
 
+export interface SelectOption {
+  key: string;
+  value: string;
+}
+
 interface SelectProps
   extends
     VariantProps<typeof selectWrapperVariants>,
@@ -53,7 +58,7 @@ interface SelectProps
   label: string;
   error?: ReactNode;
   placeholder?: string;
-  options?: string[];
+  options?: SelectOption[];
 }
 
 export default function Select({
@@ -86,9 +91,9 @@ export default function Select({
               {placeholder}
             </option>
           )}
-          {options?.map((option) => (
-            <option key={option} value={option}>
-              {option}
+          {options?.map(({ key, value }) => (
+            <option key={key} value={key}>
+              {value}
             </option>
           ))}
           {children}

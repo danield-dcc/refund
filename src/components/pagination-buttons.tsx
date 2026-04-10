@@ -23,7 +23,7 @@ export default function PaginationButton({
   return (
     <div className="flex items-center justify-center gap-3 mt-auto">
       <ButtonIcon
-        className="fill-gray-500 h-8 w-8 rounded-lg p-2.5"
+        className="fill-gray-500 h-8 w-8 rounded-lg px-2.5"
         icon={ChevronLeft}
         iconClassName={"h-[16.5px] w-2.25"}
         disabled={isLoadingRefunds || page === 1}

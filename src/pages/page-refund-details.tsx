@@ -3,7 +3,7 @@ import ContentCard from "../components/ui/ContentCard";
 import InputText from "../components/ui/input-text";
 import Text from "../components/ui/text";
 import { Controller, useForm } from "react-hook-form";
-import { schema, type FormData } from "../features/schema/refund";
+import { schema, type FormDataType } from "../features/schema/refund";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Select from "../components/ui/select";
 import UploadInput from "../components/ui/upload-input";
@@ -18,15 +18,24 @@ export default function PageRefundDetails() {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormDataType>({
     resolver: zodResolver(schema),
     defaultValues: { name: "", category: "", value: "" },
   });
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: FormDataType) {
     console.log(data);
     // navigate("/confirmation");
   }
+
+  const options = [
+    { key: "food", value: "Alimentação" },
+    { key: "hosting", value: "Hospedagem" },
+    { key: "transport", value: "Transporte" },
+    { key: "services", value: "Serviços" },
+    { key: "other", value: "Outros" },
+  ];
+
   return (
     <div className="flex justify-center">
       <ContentCard>
@@ -52,13 +61,7 @@ export default function PageRefundDetails() {
               id="category"
               label="CATEGORIA"
               className="flex-1"
-              options={[
-                "Alimentação",
-                "Hospedagem",
-                "Transporte",
-                "Serviços",
-                "Outros",
-              ]}
+              options={options}
               placeholder="Selecione"
               error={errors.category?.message}
               {...register("category")}

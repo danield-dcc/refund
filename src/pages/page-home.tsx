@@ -1,10 +1,6 @@
 import { useForm } from "react-hook-form";
-import BedIcon from "../assets/icons/bed.svg?react";
-import CutleryIcon from "../assets/icons/cutlery.svg?react";
-import CarIcon from "../assets/icons/police_car.svg?react";
 import ReceiptIcon from "../assets/icons/receipt.svg?react";
 import SearchIcon from "../assets/icons/search.svg?react";
-import WrenchIcon from "../assets/icons/wrench.svg?react";
 import ButtonIcon from "../components/ui/button-icon";
 import Container from "../components/ui/container";
 import Divider from "../components/ui/diviser";
@@ -18,22 +14,7 @@ import {
   type FormRefundSchemaType,
 } from "../features/schema/refund";
 import PaginationButton from "../components/pagination-buttons";
-
-const _CATEGORY_ICON = {
-  food: CutleryIcon,
-  hosting: BedIcon,
-  transport: CarIcon,
-  services: WrenchIcon,
-  other: ReceiptIcon,
-} as const;
-
-const _CATEGORY_NAMES = {
-  food: "Alimentação",
-  hosting: "Hospedagem",
-  transport: "Transporte",
-  services: "Serviços",
-  other: "Outros",
-} as const;
+import { _CATEGORY_ICON, _CATEGORY_NAMES } from "../features/tables";
 
 export default function PageHome() {
   const { refunds, meta, isLoadingRefunds, page, setPage, filters } =
@@ -67,8 +48,7 @@ export default function PageHome() {
 
       <Divider className="mt-6" />
 
-      {/* items da home */}
-      <div className="flex flex-col gap-4 mt-6">
+      <div className="flex flex-col gap-4 mt-6 h-10">
         {!isLoadingRefunds &&
           refunds.map((item) => (
             <ListOfSolicitations

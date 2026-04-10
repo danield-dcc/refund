@@ -26,11 +26,11 @@ export default function PageComponents() {
         <Select
           label="Texto"
           options={[
-            "Alimentação",
-            "Hospedagem",
-            "Transporte",
-            "Serviços",
-            "Outros",
+            { key: "food", value: "Alimentação" },
+            { key: "hosting", value: "Hospedagem" },
+            { key: "transport", value: "Transporte" },
+            { key: "services", value: "Serviços" },
+            { key: "other", value: "Outros" },
           ]}
         />
       </div>

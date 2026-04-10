@@ -8,9 +8,21 @@ import Select from "../components/ui/select";
 import Text from "../components/ui/text";
 import UploadInput from "../components/ui/upload-input";
 import { schema, type FormDataType } from "../features/schema/refund";
+import useRefund from "../features/page-home/hooks/use-refund";
+
+const options = [
+  { key: "food", value: "Alimentação" },
+  { key: "hosting", value: "Hospedagem" },
+  { key: "transport", value: "Transporte" },
+  { key: "services", value: "Serviços" },
+  { key: "other", value: "Outros" },
+];
 
 export default function PageNewRefund() {
   const navigate = useNavigate();
+
+  const { createRefund } = useRefund();
+
   const {
     register,
     handleSubmit,
@@ -21,8 +33,8 @@ export default function PageNewRefund() {
     defaultValues: { name: "", category: "", value: "" },
   });
 
-  function onSubmit(data: FormDataType) {
-    console.log(data);
+  async function onSubmit(payload: FormDataType) {
+    await createRefund(payload);
     navigate("/confirmation");
   }
 
@@ -51,13 +63,7 @@ export default function PageNewRefund() {
               id="category"
               label="CATEGORIA"
               className="flex-1"
-              options={[
-                "Alimentação",
-                "Hospedagem",
-                "Transporte",
-                "Serviços",
-                "Outros",
-              ]}
+              options={options}
               placeholder="Selecione"
               error={errors.category?.message}
               {...register("category")}
