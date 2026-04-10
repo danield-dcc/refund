@@ -7,7 +7,7 @@ import InputText from "../components/ui/input-text";
 import Select from "../components/ui/select";
 import Text from "../components/ui/text";
 import UploadInput from "../components/ui/upload-input";
-import { schema, type FormData } from "../features/schema/refund";
+import { schema, type FormDataType } from "../features/schema/refund";
 
 export default function PageNewRefund() {
   const navigate = useNavigate();
@@ -16,12 +16,12 @@ export default function PageNewRefund() {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormDataType>({
     resolver: zodResolver(schema),
     defaultValues: { name: "", category: "", value: "" },
   });
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: FormDataType) {
     console.log(data);
     navigate("/confirmation");
   }

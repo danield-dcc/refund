@@ -6,6 +6,7 @@ interface ListItemsProps {
   icon: React.ComponentProps<typeof Icon>["svg"];
   category: string;
   price: number;
+  id: string;
 }
 
 export default function ListOfSolicitations({
@@ -13,6 +14,7 @@ export default function ListOfSolicitations({
   icon,
   category,
   price,
+  id,
 }: ListItemsProps) {
   return (
     <div className="flex justify-between items-center">

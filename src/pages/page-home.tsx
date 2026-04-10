@@ -1,6 +1,5 @@
+import { useForm } from "react-hook-form";
 import BedIcon from "../assets/icons/bed.svg?react";
-import ChevronLeft from "../assets/icons/chevron-left.svg?react";
-import ChevronRight from "../assets/icons/chevron-right.svg?react";
 import CutleryIcon from "../assets/icons/cutlery.svg?react";
 import CarIcon from "../assets/icons/police_car.svg?react";
 import ReceiptIcon from "../assets/icons/receipt.svg?react";
@@ -13,6 +12,12 @@ import InputText from "../components/ui/input-text";
 import Text from "../components/ui/text";
 import useRefunds from "../features/page-home/hooks/use-refunds";
 import ListOfSolicitations from "../features/page-home/ListOfSolicitations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  SearchRefundSchema,
+  type FormRefundSchemaType,
+} from "../features/schema/refund";
+import PaginationButton from "../components/pagination-buttons";
 
 const _CATEGORY_ICON = {
   food: CutleryIcon,
@@ -31,17 +36,35 @@ const _CATEGORY_NAMES = {
 } as const;
 
 export default function PageHome() {
-  const { refunds, isLoadingRefunds } = useRefunds();
+  const { refunds, meta, isLoadingRefunds, page, setPage, filters } =
+    useRefunds();
+  const { register, handleSubmit } = useForm<FormRefundSchemaType>({
+    resolver: zodResolver(SearchRefundSchema),
+  });
+
+  function refundSearch(data: FormRefundSchemaType) {
+    filters.setQ(data.name);
+    setPage(1);
+  }
 
   return (
     <Container className="bg-gray-500 max-w-270.5 h-146 mx-auto rounded-2xl p-10 flex flex-col">
       <Text variant="title-md" className="text-gray-100">
         Solicitações
       </Text>
-      <div className="flex gap-3 items-center mt-6">
-        <InputText placeholder="Pesquisar pelo nome" className="flex-1 " />
+
+      <form
+        onSubmit={handleSubmit(refundSearch)}
+        className="flex gap-3 items-center mt-6"
+      >
+        <InputText
+          placeholder="Pesquisar pelo nome"
+          className="flex-1"
+          {...register("name")}
+        />
         <ButtonIcon icon={SearchIcon} className="h-12 w-12 mt-1" />
-      </div>
+      </form>
+
       <Divider className="mt-6" />
 
       {/* items da home */}
@@ -50,6 +73,7 @@ export default function PageHome() {
           refunds.map((item) => (
             <ListOfSolicitations
               key={item.id}
+              id={item.id}
               icon={
                 _CATEGORY_ICON[item.category as keyof typeof _CATEGORY_ICON] ??
                 ReceiptIcon
@@ -65,21 +89,12 @@ export default function PageHome() {
           ))}
       </div>
 
-      <div className="flex items-center justify-center gap-3 mt-auto">
-        <ButtonIcon
-          className="fill-gray-500 h-8 w-8 rounded-lg p-2.5"
-          icon={ChevronLeft}
-          iconClassName={"h-[16.5px] w-2.25"}
-        />
-        <Text variant="body-md" className="text-gray-200">
-          1/3
-        </Text>
-        <ButtonIcon
-          className="fill-gray-500 h-8 w-8 rounded-lg"
-          icon={ChevronRight}
-          iconClassName={"h-[16.5px] w-2.25"}
-        />
-      </div>
+      <PaginationButton
+        isLoadingRefunds={isLoadingRefunds}
+        page={page}
+        setPage={setPage}
+        lastPage={meta?.lastPage}
+      />
     </Container>
   );
 }

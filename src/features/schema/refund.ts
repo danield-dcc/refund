@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const schema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
+  name: z.string().min(3, "Nome é obrigatório"),
   category: z.string().min(1, "Categoria é obrigatória"),
   value: z.string().min(1, "Valor é obrigatório"),
   receipt: z
@@ -12,4 +12,11 @@ export const schema = z.object({
     ),
 });
 
-export type FormData = z.infer<typeof schema>;
+export type FormDataType = z.infer<typeof schema>;
+
+
+export const SearchRefundSchema = z.object({
+  name: z.string().min(3, "Nome é obrigatório"),
+})
+
+export type FormRefundSchemaType = z.infer<typeof SearchRefundSchema>
