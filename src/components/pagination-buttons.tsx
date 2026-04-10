@@ -1,8 +1,8 @@
-import ButtonIcon from "./ui/button-icon";
-import Text from "./ui/text";
+import type { Options } from "nuqs";
 import ChevronLeft from "../assets/icons/chevron-left.svg?react";
 import ChevronRight from "../assets/icons/chevron-right.svg?react";
-import type { Options } from "nuqs";
+import ButtonIcon from "./ui/button-icon";
+import Text from "./ui/text";
 
 interface PaginationButtonProps {
   isLoadingRefunds: boolean;

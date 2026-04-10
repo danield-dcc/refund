@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Icon from "../../components/ui/icon";
 import Text from "../../components/ui/text";
 
@@ -17,7 +18,7 @@ export default function ListOfSolicitations({
   id,
 }: ListItemsProps) {
   return (
-    <div className="flex justify-between items-center">
+    <Link to={`/details/${id}`} className="flex justify-between items-center">
       <div className="flex gap-2 items-center">
         <div className="flex items-center justify-center bg-gray-400 rounded-full h-8.5 w-8.5 ">
           <Icon svg={icon} className="w-4.5 h-4.5 fill-green-100" />
@@ -40,6 +41,6 @@ export default function ListOfSolicitations({
           {price}
         </Text>
       </span>
-    </div>
+    </Link>
   );
 }

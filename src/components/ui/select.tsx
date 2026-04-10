@@ -52,8 +52,7 @@ export interface SelectOption {
 }
 
 interface SelectProps
-  extends
-    VariantProps<typeof selectWrapperVariants>,
+  extends VariantProps<typeof selectWrapperVariants>,
     Omit<ComponentProps<"select">, "size" | "disabled"> {
   label: string;
   error?: ReactNode;

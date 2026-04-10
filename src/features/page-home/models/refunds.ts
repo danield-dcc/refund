@@ -2,6 +2,10 @@ export interface RefundsResponse {
   refunds: RefundsProps;
 }
 
+export interface RefundResponse {
+  refund: RefundItem;
+}
+
 export interface RefundsProps {
   meta: RefundsMeta;
   data: RefundItem[];

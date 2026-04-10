@@ -1,6 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import ReceiptIcon from "../assets/icons/receipt.svg?react";
 import SearchIcon from "../assets/icons/search.svg?react";
+import PaginationButton from "../components/pagination-buttons";
 import ButtonIcon from "../components/ui/button-icon";
 import Container from "../components/ui/container";
 import Divider from "../components/ui/diviser";
@@ -8,12 +10,10 @@ import InputText from "../components/ui/input-text";
 import Text from "../components/ui/text";
 import useRefunds from "../features/page-home/hooks/use-refunds";
 import ListOfSolicitations from "../features/page-home/ListOfSolicitations";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  SearchRefundSchema,
   type FormRefundSchemaType,
+  SearchRefundSchema,
 } from "../features/schema/refund";
-import PaginationButton from "../components/pagination-buttons";
 import { _CATEGORY_ICON, _CATEGORY_NAMES } from "../features/tables";
 
 export default function PageHome() {
@@ -73,7 +73,7 @@ export default function PageHome() {
         isLoadingRefunds={isLoadingRefunds}
         page={page}
         setPage={setPage}
-        lastPage={meta?.lastPage}
+        lastPage={meta?.lastPage ?? 1}
       />
     </Container>
   );

@@ -26,10 +26,8 @@ function formatBytes(bytes: number): string {
   return `${bytes}B`;
 }
 
-interface UploadInputProps extends Omit<
-  ComponentProps<"input">,
-  "type" | "id" | "accept"
-> {
+interface UploadInputProps
+  extends Omit<ComponentProps<"input">, "type" | "id" | "accept"> {
   label?: string;
   id: string;
   placeholder?: string;

@@ -7,8 +7,8 @@ import InputText from "../components/ui/input-text";
 import Select from "../components/ui/select";
 import Text from "../components/ui/text";
 import UploadInput from "../components/ui/upload-input";
-import { schema, type FormDataType } from "../features/schema/refund";
 import useRefund from "../features/page-home/hooks/use-refund";
+import { type FormDataType, schema } from "../features/schema/refund";
 
 const options = [
   { key: "food", value: "Alimentação" },

@@ -1,4 +1,4 @@
 export interface Receipt {
-  id: string
-  filename: string
+  id: string;
+  filename: string;
 }
