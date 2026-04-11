@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import Button from "../components/ui/button";
-import ContentCard from "../components/ui/ContentCard";
+import ContentCard from "../components/ui/content-card";
 import InputText from "../components/ui/input-text";
 import Select from "../components/ui/select";
 import Text from "../components/ui/text";

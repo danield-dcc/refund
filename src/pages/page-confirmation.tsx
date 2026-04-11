@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import SuccessIcon from "../assets/icons/success.svg?react";
 import Button from "../components/ui/button";
-import ContentCard from "../components/ui/ContentCard";
+import ContentCard from "../components/ui/content-card";
 import Icon from "../components/ui/icon";
 import Text from "../components/ui/text";
 

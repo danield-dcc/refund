@@ -1,19 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import AlertDialogDeleteRefund from "../components/delete-refund";
 import Button from "../components/ui/button";
-import ContentCard from "../components/ui/ContentCard";
+import ContentCard from "../components/ui/content-card";
 import InputText from "../components/ui/input-text";
 import ReceiptLink from "../components/ui/receipt-link";
 import Select from "../components/ui/select";
 import Text from "../components/ui/text";
-
+import useRefund from "../features/page-home/hooks/use-refund";
 import {
   type DetailFormDataType,
   detailsSchema,
 } from "../features/schema/refund";
-import useRefund from "../features/page-home/hooks/use-refund";
 
 const options = [
   { key: "food", value: "Alimentação" },
@@ -25,12 +25,21 @@ const options = [
 
 export default function PageRefundDetails() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const { refund, isLoadingRefund, getReceiptDownloadUrl } = useRefund(id);
+  const {
+    refund,
+    isLoadingRefund,
+    getReceiptDownloadUrl,
+    deleteUserRefund,
+    hasRefundError,
+    isDeletingRefund,
+  } = useRefund(id);
 
   const {
     register,
-    handleSubmit,
     reset,
     formState: { errors },
   } = useForm<DetailFormDataType>({
@@ -40,8 +49,6 @@ export default function PageRefundDetails() {
 
   useEffect(() => {
     if (refund) {
-      console.log("useEffect", refund);
-
       reset({
         name: refund?.title,
         category: refund?.category,
@@ -50,8 +57,19 @@ export default function PageRefundDetails() {
     }
   }, [refund, reset]);
 
-  function onSubmit(data: DetailFormDataType) {
-    console.log(data);
+  async function handleDeleteRefund() {
+    setDeleteError(null);
+
+    try {
+      deleteUserRefund();
+      setIsDeleteDialogOpen(false);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      setDeleteError(
+        "Nao foi possivel excluir a solicitacao. Tente novamente.",
+      );
+    }
   }
 
   return (
@@ -70,11 +88,12 @@ export default function PageRefundDetails() {
           <Text variant="body-md" className="text-gray-200 mt-6">
             Carregando...
           </Text>
+        ) : hasRefundError || !refund ? (
+          <Text variant="body-md" className="text-gray-200 mt-6">
+            Solicitacao nao encontrada.
+          </Text>
         ) : (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 mt-6"
-          >
+          <div className="flex flex-col gap-4 mt-6">
             <InputText
               id="name"
               label="NOME DA SOLICITAÇÃO"
@@ -110,10 +129,22 @@ export default function PageRefundDetails() {
               />
             )}
 
-            <Button type="submit" className="mt-2">
-              Excluir Solicitação
-            </Button>
-          </form>
+            <AlertDialogDeleteRefund
+              errorMessage={deleteError}
+              open={isDeleteDialogOpen}
+              onOpenChange={(open) => {
+                setIsDeleteDialogOpen(open);
+
+                if (!open) {
+                  setDeleteError(null);
+                }
+              }}
+              onConfirm={handleDeleteRefund}
+              isPending={isDeletingRefund}
+            >
+              <Button className="mt-2">Excluir Solicitação</Button>
+            </AlertDialogDeleteRefund>
+          </div>
         )}
       </ContentCard>
     </div>

@@ -21,7 +21,7 @@ export default function ReceiptLink({
     <button
       type="button"
       onClick={handleOpen}
-      className="flex items-center justify-center gap-2 text-green-100 hover:text-green-200 hover:border-gray-100 hover:cursor-pointer transition-colors"
+      className="flex items-center justify-center gap-2 text-green-100 hover:text-green-200 hover:cursor-pointer transition-colors border border-transparent hover:border-green-200 rounded px-2 py-1"
     >
       <Icon svg={ReceiptIcon} className="w-4 h-4 fill-green-100" />
       <Text variant="body-md" className="text-green-100">

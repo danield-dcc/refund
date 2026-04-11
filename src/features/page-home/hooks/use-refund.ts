@@ -1,19 +1,47 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, fetcher } from "../../../helpers/api";
 import type { FormDataType } from "../../schema/refund";
-import type { RefundResponse } from "../models/refunds";
+import type { RefundResponse, RefundsResponse, } from "../models/refunds";
 
 export default function useRefund(id?: string | undefined) {
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery<RefundResponse>({
+  const { data, isError, isLoading } = useQuery<RefundResponse>({
     queryKey: ["refund", id],
     queryFn: () => fetcher(`/refunds/${id}`),
     enabled: !!id,
   });
 
+  const { mutateAsync: deleteUserRefund, isPending: isDeletingRefund } =
+    useMutation({
+      mutationFn: async () => {
+        await api.delete(`/refunds/${id}`);
+      },
+      onSuccess: () => {
+        queryClient.removeQueries({ queryKey: ["refund", id], exact: true });
+        queryClient.setQueriesData<
+          RefundsResponse | RefundResponse | undefined
+        >({ queryKey: ["refund"] }, (currentData) => {
+          if (!currentData || !("refunds" in currentData)) {
+            return currentData;
+          }
+
+          return {
+            ...currentData,
+            refunds: {
+              ...currentData.refunds,
+              data: currentData.refunds.data.filter(
+                (refundItem) => refundItem.id !== id,
+              ),
+            },
+          };
+        });
+        queryClient.invalidateQueries({ queryKey: ["refund"] });
+      },
+    });
+
+
   async function createRefund(payload: FormDataType) {
-    console.log(payload);
     try {
       const { data } = await api.post(
         `/receipts`,
@@ -51,8 +79,11 @@ export default function useRefund(id?: string | undefined) {
 
   return {
     createRefund,
+    deleteUserRefund,
     getReceiptDownloadUrl,
+    hasRefundError: isError,
     refund: data?.refund,
+    isDeletingRefund,
     isLoadingRefund: isLoading,
   };
 }
