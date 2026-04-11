@@ -7,6 +7,7 @@ import PageConfirmation from "./pages/page-confirmation";
 import PageHome from "./pages/page-home";
 import PageNewRefund from "./pages/page-new-refund";
 import PageRefundDetails from "./pages/page-refund-details";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NuqsAdapter>
+        <Toaster richColors position="bottom-center" />
         <BrowserRouter>
           <Routes>
             <Route element={<LayoutMain />}>

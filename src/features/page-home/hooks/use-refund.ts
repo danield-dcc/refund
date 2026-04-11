@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, fetcher } from "../../../helpers/api";
 import type { FormDataType } from "../../schema/refund";
 import type { RefundResponse, RefundsResponse, } from "../models/refunds";
+import { toast } from "sonner";
 
 export default function useRefund(id?: string | undefined) {
   const queryClient = useQueryClient();
@@ -11,6 +12,45 @@ export default function useRefund(id?: string | undefined) {
     queryFn: () => fetcher(`/refunds/${id}`),
     enabled: !!id,
   });
+
+  async function createRefund(payload: FormDataType) {
+    try {
+      const { data } = await api.post(
+        `/receipts`,
+        {
+          receiptFile: payload.receipt[0],
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      await api.post(`/refunds`, {
+        title: payload.name,
+        category: payload.category,
+        value: payload.value,
+        receipt: data.receipt.id,
+      });
+
+      //refetch
+      queryClient.invalidateQueries({ queryKey: ["refund"] });
+
+      toast.success("Refund criado com sucesso!")
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao criar Refund.")
+      throw error;
+    }
+  }
+
+  function getReceiptDownloadUrl(receiptId: string): string {
+    return new URL(
+      `/receipts/download/${receiptId}`,
+      import.meta.env.VITE_API_URL,
+    ).toString();
+  }
 
   const { mutateAsync: deleteUserRefund, isPending: isDeletingRefund } =
     useMutation({
@@ -37,45 +77,12 @@ export default function useRefund(id?: string | undefined) {
           };
         });
         queryClient.invalidateQueries({ queryKey: ["refund"] });
+        toast.success("Refund excluído com sucesso!")
       },
+      onError: () => {
+        toast.error("Não foi possivel excluir a solicitação. Tente novamente.")
+      }
     });
-
-
-  async function createRefund(payload: FormDataType) {
-    try {
-      const { data } = await api.post(
-        `/receipts`,
-        {
-          receiptFile: payload.receipt[0],
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      await api.post(`/refunds`, {
-        title: payload.name,
-        category: payload.category,
-        value: payload.value,
-        receipt: data.receipt.id,
-      });
-
-      //refetch
-      queryClient.invalidateQueries({ queryKey: ["refund"] });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  function getReceiptDownloadUrl(receiptId: string): string {
-    return new URL(
-      `/receipts/download/${receiptId}`,
-      import.meta.env.VITE_API_URL,
-    ).toString();
-  }
 
   return {
     createRefund,
