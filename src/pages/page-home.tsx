@@ -1,32 +1,17 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import ReceiptIcon from "../assets/icons/receipt.svg?react";
 import SearchIcon from "../assets/icons/search.svg?react";
 import PaginationButton from "../components/pagination-buttons";
 import ButtonIcon from "../components/ui/button-icon";
 import Container from "../components/ui/container";
 import Divider from "../components/ui/diviser";
-import InputText from "../components/ui/input-text";
 import Text from "../components/ui/text";
 import useRefunds from "../features/page-home/hooks/use-refunds";
 import ListOfSolicitations from "../features/page-home/ListOfSolicitations";
-import {
-  type FormRefundSchemaType,
-  SearchRefundSchema,
-} from "../features/schema/refund";
 import { _CATEGORY_ICON, _CATEGORY_NAMES } from "../features/tables";
+import RefundSearch from "../components/ui/refund-search";
 
 export default function PageHome() {
-  const { refunds, meta, isLoadingRefunds, page, setPage, filters } =
-    useRefunds();
-  const { register, handleSubmit } = useForm<FormRefundSchemaType>({
-    resolver: zodResolver(SearchRefundSchema),
-  });
-
-  function refundSearch(data: FormRefundSchemaType) {
-    filters.setQ(data.name);
-    setPage(1);
-  }
+  const { refunds, meta, isLoadingRefunds, page, setPage } = useRefunds();
 
   return (
     <Container className="bg-gray-500 max-w-270.5 h-146 mx-auto rounded-2xl p-10 flex flex-col">
@@ -34,17 +19,10 @@ export default function PageHome() {
         Solicitações
       </Text>
 
-      <form
-        onSubmit={handleSubmit(refundSearch)}
-        className="flex gap-3 items-center mt-6"
-      >
-        <InputText
-          placeholder="Pesquisar pelo nome"
-          className="flex-1"
-          {...register("name")}
-        />
+      <div className="flex gap-3 items-center mt-6">
+        <RefundSearch />
         <ButtonIcon icon={SearchIcon} className="h-12 w-12 mt-1" />
-      </form>
+      </div>
 
       <Divider className="mt-6" />
 
